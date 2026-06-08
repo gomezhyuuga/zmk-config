@@ -1712,7 +1712,7 @@ behaviors {
  &kp LG(R)  &kp PAUSE_BREAK       &kp LG(A)       &kp LG(Z)    &kp LS(LG(Z))  &kp LG(X)                                                                                               &kp DEL      &kp BSPC   &kp LA(BSPC)        &kp LA(DEL)       &kp TAB              &kp PSCRN
  &sk LSHFT        &kp LG(W)         &kp DEL    &kp LA(BSPC)      &kp LA(DEL)  &kp LG(C)                                                                                              &kp LEFT      &kp DOWN         &kp UP          &kp RIGHT     &kp K_APP              &sk RSHFT
  &sk LGUI         &kp LG(L)  &kp LG(LA(F8))  &kp LG(LA(F9))  &kp LG(LA(F17))  &kp LG(V)                                                                                      &kp LA(LS(LEFT))  &kp LA(LEFT)  &kp LA(RIGHT)  &kp LA(LS(RIGHT))  &kp LG(LEFT)          &kp LG(RIGHT)
-                             &kp LG(LA(F7))   &kp LS(LG(G))        &kp LG(G)                                                                                                                      &kp PG_DN  &kp PG_UP          &kp LG(G)
+                             &kp LC(LA(F11))   &kp LS(LG(G))        &kp LG(G)                                                                                                                      &kp PG_DN  &kp PG_UP          &kp LG(G)
                                                                                           &none   &none   &none  &kp LG(LEFT)  &kp LG(RIGHT)  &cur_EXTEND_WORD_macos_v1_TKZ
             >;
         };
@@ -1807,10 +1807,10 @@ behaviors {
 
         layer_fn {
             bindings = <
-  &none     &none     &none                  &none                  &none   &none                                                                       &none        &none            &none            &none   &none   &none
- &trans    &trans    &trans  &kp LC(LS(LG(LA(E))))  &kp LS(LA(LC(LG(R))))  &trans                                                                 &kp LA(F19)  &kp LA(F20)  &kp LA(LC(F11))  &kp LA(LC(F12))   &none   &none
- &trans  &kp LEFT  &kp DOWN                 &kp UP              &kp RIGHT  &trans                                                                 &kp LA(F15)  &kp LA(F16)      &kp LA(F17)      &kp LA(F18)   &none   &none
- &trans    &trans    &trans                 &trans                 &trans  &trans                                                                 &kp LA(F11)  &kp LA(F12)      &kp LA(F13)      &kp LA(F14)   &none   &none
+  &none     &none     &none                  &none                  &none   &none                                                                       &kp LA(F21)  &kp LA(F22)      &kp LA(F23)      &kp LA(F24)   &kp LA(LC(F19)) &kp LA(LC(F20))
+ &trans    &trans    &trans  &kp LC(LS(LG(LA(E))))  &kp LS(LA(LC(LG(R))))  &trans                                                                 &kp LA(F19)  &kp LA(F20)  &kp LA(LC(F11))  &kp LA(LC(F12))   &kp LA(LC(F17)) &kp LA(LC(F18))
+ &trans  &kp LEFT  &kp DOWN                 &kp UP              &kp RIGHT  &trans                                                                 &kp LA(F15)  &kp LA(F16)      &kp LA(F17)      &kp LA(F18)   &kp LA(LC(F15)) &kp LA(LC(F16))
+ &trans    &trans    &trans                 &trans                 &trans  &trans                                                                 &kp LA(F11)  &kp LA(F12)      &kp LA(F13)      &kp LA(F14)   &kp LA(LC(F13)) &kp LA(LC(F14))
                       &none                  &none                  &none                                                                                            &none            &none            &none
                                                                                     &none   &none  &sk LA(LS(LG(LCTRL)))   &none   &none   &none
             >;

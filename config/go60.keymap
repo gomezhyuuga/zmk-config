@@ -1711,8 +1711,8 @@ behaviors {
  &kp PSCRN          &kp ESC         &kp INS     &kp LS(TAB)         &kp BSPC  &kp LG(F)                                                                                              &kp HOME     &kp PG_DN      &kp PG_UP            &kp END      &kp SLCK  &kp LC(LA(LS(LG(A))))
  &kp LG(R)  &kp PAUSE_BREAK       &kp LG(A)       &kp LG(Z)    &kp LS(LG(Z))  &kp LG(X)                                                                                               &kp DEL      &kp BSPC   &kp LA(BSPC)        &kp LA(DEL)       &kp TAB              &kp PSCRN
  &sk LSHFT        &kp LG(W)         &kp DEL    &kp LA(BSPC)      &kp LA(DEL)  &kp LG(C)                                                                                              &kp LEFT      &kp DOWN         &kp UP          &kp RIGHT     &kp K_APP              &sk RSHFT
- &kp LG(L)         &sk LGUI  &kp LG(LA(F8))  &kp LG(LA(F9))  &kp LG(LA(F17))  &kp LG(V)                                                                                      &kp LA(LS(LEFT))  &kp LA(LEFT)  &kp LA(RIGHT)  &kp LA(LS(RIGHT))  &kp LG(LEFT)          &kp LG(RIGHT)
-                             &kp LG(LA(F7))   &kp LS(LG(G))        &kp LG(G)                                                                                                                      &kp LG(F)  &kp LS(LG(G))          &kp LG(G)
+ &sk LGUI         &kp LG(L)  &kp LG(LA(F8))  &kp LG(LA(F9))  &kp LG(LA(F17))  &kp LG(V)                                                                                      &kp LA(LS(LEFT))  &kp LA(LEFT)  &kp LA(RIGHT)  &kp LA(LS(RIGHT))  &kp LG(LEFT)          &kp LG(RIGHT)
+                             &kp LG(LA(F7))   &kp LS(LG(G))        &kp LG(G)                                                                                                                      &kp PG_DN  &kp PG_UP          &kp LG(G)
                                                                                           &none   &none   &none  &kp LG(LEFT)  &kp LG(RIGHT)  &cur_EXTEND_WORD_macos_v1_TKZ
             >;
         };

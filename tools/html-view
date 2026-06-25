@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Lightweight native HTML viewer (NSWindow + WKWebView, no browser).
+# Compiles tools/html-view.swift on first use, then caches the binary
+# and only rebuilds when the source changes.
+#
+#   tools/html-view wiki/layout.html
+#   tools/html-view https://zmk.dev/docs
+#
+# In the window:  esc / ⌘W close   ⌘R reload   ⌘=/⌘- zoom   ⌘0 reset zoom
+set -euo pipefail
+
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SRC="$DIR/html-view.swift"
+BIN="$DIR/.html-view.bin"
+
+if [[ ! -x "$BIN" || "$SRC" -nt "$BIN" ]]; then
+  echo "building html-view…" >&2
+  swiftc -O "$SRC" -o "$BIN"
+fi
+
+exec "$BIN" "$@"

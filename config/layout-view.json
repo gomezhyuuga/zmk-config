@@ -1,0 +1,7 @@
+{
+  "_comment": "Config for the Go60 HTML layout viewer (tools/gen-layout-html.py). Run `make html` after editing. Top-level keys are namespaced sections; underscore-prefixed keys are ignored.",
+  "_labels_format": "labels maps a physical position to a custom legend. \"POS\": \"text\" relabels every layer where the key is active (skips transparent/blank). \"POS\": {\"LayerName\": \"text\"} targets specific layers only. Positions use the info.json scheme, e.g. R_C3R2.",
+  "labels": {
+    "R_C3R2": "👁️ kbd"
+  }
+}

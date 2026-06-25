@@ -2,17 +2,17 @@ DOCKER_IMAGE  := go60-zmk-config-docker
 DOCKER_VOLUME := go60-zmk-nix-store
 KEYMAP_WORD_RE := &?[A-Za-z_][A-Za-z_0-9]*(\([^)]*\))?
 
-.PHONY: help build build-fast build-rebuild flash flash-slow draw layout-html ident ident-html layers diff diff-keymap setup-git clean nuke
+.PHONY: help build build-full build-rebuild flash flash-slow draw html ident ident-html layers diff diff-keymap setup-git clean nuke
 
 help:
 	@echo "Targets:"
-	@echo "  build          Build firmware via Docker (./build.sh)."
-	@echo "  build-fast     Build, skipping the in-container 'git fetch origin'."
+	@echo "  build          Build, skipping the in-container 'git fetch origin'."
+	@echo "  build-full     Build firmware via Docker (./build.sh), with 'git fetch origin'."
 	@echo "  build-rebuild  Force a fresh 'docker build' before building."
 	@echo "  flash          Build (skipping fetch), then copy go60.uf2 onto the bootloader drive."
 	@echo "  flash-slow     Same as flash but does the in-container 'git fetch origin' first."
 	@echo "  draw           Render keymap-drawer/keymap.svg from config/go60.keymap."
-	@echo "  layout-html    Generate wiki/layout.html (all layers, HTML viewer) from keymap.yaml."
+	@echo "  html           Generate wiki/layout.html (all layers, HTML viewer) from keymap.yaml."
 	@echo "  ident          Run the terminal key-position identifier."
 	@echo "  ident-html     Open the browser-based key-position identifier."
 	@echo "  layers         Open the layer popup viewer (builds binary if needed)."
@@ -25,10 +25,10 @@ help:
 	@echo "Variables: BRANCH=<ref> picks a ZMK ref. Example: make build BRANCH=v0.2-rc1"
 
 build:
-	./build.sh $(BRANCH)
-
-build-fast:
 	SKIP_FETCH=1 ./build.sh $(BRANCH)
+
+build-full:
+	./build.sh $(BRANCH)
 
 build-rebuild:
 	REBUILD=1 ./build.sh $(BRANCH)
@@ -42,11 +42,12 @@ flash-slow:
 draw:
 	./draw.sh
 
-# Regenerate the all-layers HTML viewer. Needs keymap-drawer/keymap.yaml (run draw first).
-layout-html: keymap-drawer/keymap.yaml
+# Regenerate the all-layers HTML viewer. The keymap.yaml prerequisite is
+# rebuilt automatically whenever config/go60.keymap or config/info.json change.
+html: keymap-drawer/keymap.yaml
 	python3 tools/gen-layout-html.py
 
-keymap-drawer/keymap.yaml:
+keymap-drawer/keymap.yaml: config/go60.keymap config/info.json
 	./draw.sh
 
 ident:

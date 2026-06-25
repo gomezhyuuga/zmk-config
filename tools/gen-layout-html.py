@@ -4,6 +4,7 @@
 Reads:
   - keymap-drawer/keymap.yaml   (layers + combos, produced by ./draw.sh)
   - config/info.json            (physical key positions, incl. thumb rotation)
+  - config/layout-view.json     (optional viewer config: custom key labels, …)
 
 Writes:
   - wiki/layout.html            (one page, all layers, JS layer switcher)
@@ -22,6 +23,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 KEYMAP_YAML = ROOT / "keymap-drawer" / "keymap.yaml"
 INFO_JSON = ROOT / "config" / "info.json"
 OUT_HTML = ROOT / "wiki" / "layout.html"
+VIEW_CONFIG = ROOT / "config" / "layout-view.json"
 
 # Layers to omit: per-finger HRM helper layers, the mouse speed variants, and Gaming.
 # The main Mouse layer is kept.
@@ -110,6 +112,39 @@ def parse_key(entry):
     }
 
 
+def load_view_config():
+    """Load optional viewer config (config/layout-view.json). Missing file → {}.
+
+    Top-level keys namespace future options; underscore-prefixed keys (e.g.
+    "_comment") are ignored. Currently only "labels" is consumed.
+    """
+    if not VIEW_CONFIG.exists():
+        return {}
+    return json.loads(VIEW_CONFIG.read_text())
+
+
+def apply_label_overrides(layers, keys_geo, overrides):
+    """Replace key legends per the `labels` config, keyed by physical position."""
+    pos_index = {g["label"]: i for i, g in enumerate(keys_geo)}
+    for pos, spec in overrides.items():
+        i = pos_index.get(pos)
+        if i is None:
+            print(f"  warning: LABEL_OVERRIDES position {pos!r} not found in info.json")
+            continue
+        per_layer = spec if isinstance(spec, dict) else None
+        for layer_name, keys in layers.items():
+            if per_layer is not None:
+                if layer_name not in per_layer:
+                    continue
+                text = per_layer[layer_name]
+            else:
+                # plain string: skip pass-through keys so ▽ stays ▽
+                if keys[i]["kind"] in ("blank", "trans"):
+                    continue
+                text = spec
+            keys[i].update(tap=text, hold="", custom=True)
+
+
 def main():
     keymap = yaml.safe_load(KEYMAP_YAML.read_text())
     info = json.loads(INFO_JSON.read_text())
@@ -132,6 +167,9 @@ def main():
         for g in geo
     ]
 
+    view_cfg = load_view_config()
+    apply_label_overrides(layers, keys_geo, view_cfg.get("labels", {}))
+
     data = {"geo": keys_geo, "layers": layers, "order": list(layers.keys())}
     payload = json.dumps(data, ensure_ascii=False)
 
@@ -152,14 +190,17 @@ TEMPLATE = r"""<!DOCTYPE html>
     --c-layer:#6cc2ff; --c-dual:#ffb454; --c-held:#ff7a93; --c-trans:#3a4150;
     --m-cmd:#ff5c5c; --m-opt:#7ed492; --m-sft:#7cc4ff; --m-ctl:#ffc14d;
     --unit:64px; --keysize:58px;
+    --zoom:1.3;
   }
   * { box-sizing:border-box; }
+  html { zoom:var(--zoom); }
   body {
     margin:0; color:var(--text);
     font-family:ui-sans-serif,-apple-system,"SF Pro Text","Segoe UI",Roboto,sans-serif;
     background:radial-gradient(1200px 700px at 50% -10%,#1a1f2b,var(--bg));
     padding:24px 16px;
-    min-height:100vh;
+    /* divide out the zoom so 100vh maps to the real viewport (no phantom scrollbar) */
+    min-height:calc(100vh / var(--zoom));
     display:flex; flex-direction:column; align-items:center; justify-content:center;
   }
   .grid { display:flex; gap:18px 22px; justify-content:center; align-items:flex-start; }
@@ -202,7 +243,9 @@ TEMPLATE = r"""<!DOCTYPE html>
   .key.trans { opacity:.32; }
   .key.trans .tap { color:var(--muted); font-weight:400; }
   .key.blank { opacity:.5; }
-  .pos { position:absolute; top:2px; right:4px; font-size:7px; color:#475061; }
+  /* custom labels (LABEL_OVERRIDES). Neutral by default — style to taste, e.g.:
+     .key.custom .tap { color:#cdd6e6; font-style:italic; } */
+  .pos { position:absolute; top:2px; right:4px; font-size:7px; color:#8b97ad; }
 
   .navbar {
     margin:20px auto 0; display:flex; flex-wrap:nowrap;
@@ -321,7 +364,7 @@ function buildBoard(name) {
   DATA.layers[name].forEach((k, idx) => {
     const g = DATA.geo[idx];
     const el = document.createElement("div");
-    el.className = "key " + k.kind;
+    el.className = "key " + k.kind + (k.custom ? " custom" : "");
     el.style.left = (g.x * UNIT) + "px";
     el.style.top  = (g.y * UNIT) + "px";
     if (g.r) {

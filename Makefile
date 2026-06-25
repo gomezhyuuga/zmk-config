@@ -12,7 +12,7 @@ help:
 	@echo "  flash          Build (skipping fetch), then copy go60.uf2 onto the bootloader drive."
 	@echo "  flash-slow     Same as flash but does the in-container 'git fetch origin' first."
 	@echo "  draw           Render keymap-drawer/keymap.svg from config/go60.keymap."
-	@echo "  html           Generate wiki/layout.html (all layers, HTML viewer) from keymap.yaml."
+	@echo "  html           Generate output/layout.html (all layers, HTML viewer) from keymap.yaml."
 	@echo "  ident          Run the terminal key-position identifier."
 	@echo "  ident-html     Open the browser-based key-position identifier."
 	@echo "  layers         Open the layer popup viewer (builds binary if needed)."
@@ -56,11 +56,19 @@ ident:
 ident-html:
 	open tools/key-id.html
 
+ifeq ($(shell uname),Darwin)
 layers: tools/layer-popup
 	U_KBD_KEYMAP=$(CURDIR)/keymap-drawer/layers tools/layer-popup
 
 tools/layer-popup: tools/layer-popup.swift
 	swiftc tools/layer-popup.swift -o tools/layer-popup
+else
+layers: output/layout.html
+	python3 tools/layer-popup.py
+
+output/layout.html: keymap-drawer/keymap.yaml
+	python3 tools/gen-layout-html.py
+endif
 
 # Word-aware diff for *.keymap. Treat each ZMK token as one "word" so a
 # single-key edit shows as a one-token swap rather than a 600-char line.

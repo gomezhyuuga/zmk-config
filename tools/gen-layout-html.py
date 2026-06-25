@@ -7,7 +7,7 @@ Reads:
   - config/layout-view.json     (optional viewer config: custom key labels, …)
 
 Writes:
-  - wiki/layout.html            (one page, all layers, JS layer switcher)
+  - output/layout.html          (one page, all layers, JS layer switcher)
 
 Unlike the SVG renderer this handles multi-line legends and CSS styling. Re-run
 after editing the keymap (run ./draw.sh first to refresh keymap.yaml).
@@ -22,7 +22,7 @@ import yaml
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 KEYMAP_YAML = ROOT / "keymap-drawer" / "keymap.yaml"
 INFO_JSON = ROOT / "config" / "info.json"
-OUT_HTML = ROOT / "wiki" / "layout.html"
+OUT_HTML = ROOT / "output" / "layout.html"
 VIEW_CONFIG = ROOT / "config" / "layout-view.json"
 
 # Layers to omit: per-finger HRM helper layers, the mouse speed variants, and Gaming.
@@ -173,6 +173,7 @@ def main():
     data = {"geo": keys_geo, "layers": layers, "order": list(layers.keys())}
     payload = json.dumps(data, ensure_ascii=False)
 
+    OUT_HTML.parent.mkdir(parents=True, exist_ok=True)
     OUT_HTML.write_text(TEMPLATE.replace("/*DATA*/", payload))
     print(f"→ {OUT_HTML.relative_to(ROOT)}  ({len(layers)} layers)")
 

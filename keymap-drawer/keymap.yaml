@@ -708,8 +708,8 @@ layers:
   - RIGHT
   - APP
   - {t: RSHFT, h: sticky}
-  - Gui+L
   - {t: LGUI, h: sticky}
+  - Gui+L
   - Gui+Alt+F8
   - Gui+Alt+F9
   - Gui+Alt+F17
@@ -720,11 +720,11 @@ layers:
   - Alt+Sft+RIGHT
   - Gui+LEFT
   - Gui+RIGHT
-  - Gui+Alt+F7
+  - Ctl+Alt+F11
   - Sft+Gui+G
   - Gui+G
-  - Gui+F
-  - Sft+Gui+G
+  - PG DN
+  - PG UP
   - Gui+G
   - {type: held}
   - ''
@@ -1168,12 +1168,12 @@ layers:
   - ''
   - ''
   - ''
-  - ''
-  - ''
-  - ''
-  - ''
-  - ''
-  - ''
+  - Alt+F21
+  - Alt+F22
+  - Alt+F23
+  - Alt+F24
+  - Alt+Ctl+F19
+  - Alt+Ctl+F20
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -1184,8 +1184,8 @@ layers:
   - Alt+F20
   - Alt+Ctl+F11
   - Alt+Ctl+F12
-  - ''
-  - ''
+  - Alt+Ctl+F17
+  - Alt+Ctl+F18
   - {t: ▽, type: trans}
   - LEFT
   - DOWN
@@ -1196,8 +1196,8 @@ layers:
   - Alt+F16
   - Alt+F17
   - Alt+F18
-  - ''
-  - ''
+  - Alt+Ctl+F15
+  - Alt+Ctl+F16
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -1208,8 +1208,8 @@ layers:
   - Alt+F12
   - Alt+F13
   - Alt+F14
-  - ''
-  - ''
+  - Alt+Ctl+F13
+  - Alt+Ctl+F14
   - ''
   - ''
   - ''

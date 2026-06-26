@@ -13,6 +13,7 @@ import pathlib
 
 from PyQt6.QtWidgets import QApplication, QMainWindow
 from PyQt6.QtWebEngineWidgets import QWebEngineView
+from PyQt6.QtWebEngineCore import QWebEngineProfile, QWebEnginePage
 from PyQt6.QtCore import Qt, QUrl
 from PyQt6.QtGui import QShortcut, QKeySequence
 
@@ -24,7 +25,11 @@ class LayerWindow(QMainWindow):
     def __init__(self, url):
         super().__init__()
         self.setWindowTitle("Keyboard Layers")
+        # Named profile persists localStorage across sessions (~/.local/share/QtWebEngine/go60-layout/)
+        profile = QWebEngineProfile("go60-layout", self)
+        page = QWebEnginePage(profile, self)
         view = QWebEngineView(self)
+        view.setPage(page)
         view.load(url)
         self.setCentralWidget(view)
         # QShortcut works at the window level — keyPressEvent won't fire because

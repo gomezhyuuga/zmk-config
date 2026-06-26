@@ -64,7 +64,7 @@ tools/layer-popup: tools/layer-popup.swift
 	swiftc tools/layer-popup.swift -o tools/layer-popup
 else
 layers: output/layout.html
-	python3 tools/layer-popup.py
+	python3 tools/show-layers-kde.py
 
 output/layout.html: keymap-drawer/keymap.yaml
 	python3 tools/gen-layout-html.py

@@ -720,7 +720,7 @@ layers:
   - Alt+Sft+RIGHT
   - Gui+LEFT
   - Gui+RIGHT
-  - Ctl+Alt+F11
+  - Meh+F11
   - Sft+Gui+G
   - Gui+G
   - PG DN
@@ -1172,8 +1172,8 @@ layers:
   - Alt+F22
   - Alt+F23
   - Alt+F24
-  - Alt+Ctl+F19
-  - Alt+Ctl+F20
+  - Meh+F19
+  - Meh+F20
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -1182,10 +1182,10 @@ layers:
   - {t: ▽, type: trans}
   - Alt+F19
   - Alt+F20
-  - Alt+Ctl+F11
-  - Alt+Ctl+F12
-  - Alt+Ctl+F17
-  - Alt+Ctl+F18
+  - Meh+F11
+  - Meh+F12
+  - Meh+F17
+  - Meh+F18
   - {t: ▽, type: trans}
   - LEFT
   - DOWN
@@ -1196,8 +1196,8 @@ layers:
   - Alt+F16
   - Alt+F17
   - Alt+F18
-  - Alt+Ctl+F15
-  - Alt+Ctl+F16
+  - Meh+F15
+  - Meh+F16
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -1208,8 +1208,8 @@ layers:
   - Alt+F12
   - Alt+F13
   - Alt+F14
-  - Alt+Ctl+F13
-  - Alt+Ctl+F14
+  - Meh+F13
+  - Meh+F14
   - ''
   - ''
   - ''

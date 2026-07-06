@@ -677,31 +677,31 @@ layers:
   - INS
   - Sft+TAB
   - BSPC
-  - Gui+F
+  - Ctl+F
   - HOME
   - PG DN
   - PG UP
   - END
   - SLCK
   - Hyper+A
-  - Gui+R
+  - Ctl+R
   - PAUSE BREAK
-  - Gui+A
-  - Gui+Z
-  - Sft+Gui+Z
-  - Gui+X
+  - Ctl+A
+  - Ctl+Z
+  - Ctl+Sft+Z
+  - Ctl+X
   - DEL
   - BSPC
-  - Alt+BSPC
-  - Alt+DEL
+  - Ctl+BSPC
+  - Ctl+DEL
   - TAB
   - PSCRN
   - {t: LSHFT, h: sticky}
-  - Gui+W
+  - Ctl+W
   - DEL
-  - Alt+BSPC
-  - Alt+DEL
-  - Gui+C
+  - Ctl+BSPC
+  - Ctl+DEL
+  - Ctl+C
   - LEFT
   - DOWN
   - UP
@@ -709,28 +709,28 @@ layers:
   - APP
   - {t: RSHFT, h: sticky}
   - {t: LGUI, h: sticky}
-  - Gui+L
+  - Ctl+L
   - Gui+Alt+F8
   - Gui+Alt+F9
   - Gui+Alt+F17
-  - Gui+V
-  - Alt+Sft+LEFT
-  - Alt+LEFT
-  - Alt+RIGHT
-  - Alt+Sft+RIGHT
-  - Gui+LEFT
-  - Gui+RIGHT
+  - Ctl+V
+  - Ctl+Sft+LEFT
+  - Ctl+LEFT
+  - Ctl+RIGHT
+  - Ctl+Sft+RIGHT
+  - HOME
+  - END
   - Meh+F11
-  - Sft+Gui+G
-  - Gui+G
+  - Ctl+Sft+G
+  - Ctl+G
   - PG DN
   - PG UP
-  - Gui+G
+  - Ctl+G
   - {type: held}
   - ''
   - ''
-  - Gui+LEFT
-  - Gui+RIGHT
+  - HOME
+  - END
   - '&cur_EXTEND_WORD_macos_v1_TKZ'
   Keypad:
   - ''
@@ -770,11 +770,11 @@ layers:
   - KP MULTIPLY
   - KP NUM
   - {t: '&rgb_ug_status_macro', h: Magic}
-  - Gui+Z
-  - Gui+X
-  - Gui+C
-  - Gui+V
-  - Sft+Gui+V
+  - Ctl+Z
+  - Ctl+X
+  - Ctl+C
+  - Ctl+V
+  - Ctl+Sft+V
   - KP ENTER
   - KP 1
   - KP 2
@@ -884,7 +884,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - Gui+C
+  - Ctl+C
   - '&mmv MOVE_UP'
   - MouseFast
   - MouseWarp
@@ -896,7 +896,7 @@ layers:
   - MouseSlow
   - MouseWarp
   - MouseFast
-  - Gui+V
+  - Ctl+V
   - '&mkp MB4'
   - '&mkp MB5'
   - '&msc MOVE_Y(35)'
@@ -1235,10 +1235,10 @@ combos:
   k: CAPS
   l: [HRM_macOS, Typing, Autoshift]
 - p: [54, 41]
-  k: '&mod_tab_chord_v2_TKZ LGUI 11'
+  k: '&mod_tab_chord_v2_TKZ LALT 11'
   l: [HRM_macOS, Typing, Autoshift]
 - p: [50, 40]
-  k: '&mod_tab_chord_v2_TKZ LGUI 11'
+  k: '&mod_tab_chord_v2_TKZ LALT 11'
   l: [HRM_macOS, Typing, Autoshift]
 - p: [1, 13]
   k: F1

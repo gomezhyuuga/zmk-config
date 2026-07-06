@@ -154,6 +154,48 @@
 #define KB_TYPE          KB_TYPE_GO_60
 #define EDITOR_HOST_OS   'M'
 
+/* Host OS toggle - change KEYMAP_OS to retarget every OS-sensitive binding below */
+#define KEYMAP_OS_MACOS 1
+#define KEYMAP_OS_LINUX 2
+#define KEYMAP_OS KEYMAP_OS_LINUX
+
+#if KEYMAP_OS == KEYMAP_OS_MACOS
+  #define OS_MOD(kc)        LG(kc)
+  #define OS_WORD(kc)       LA(kc)
+  #define OS_LINESTART      LG(LEFT)
+  #define OS_LINEEND        LG(RIGHT)
+  #define OS_SELTOLINEEND   LG(LS(RIGHT))
+  #define OS_TASKSWITCH_MOD LGUI
+#else
+  #define OS_MOD(kc)        LC(kc)
+  #define OS_WORD(kc)       LC(kc)
+  #define OS_LINESTART      HOME
+  #define OS_LINEEND        END
+  #define OS_SELTOLINEEND   LS(END)
+  #define OS_TASKSWITCH_MOD LALT
+#endif
+
+/* Semantic OS shortcuts, built from OS_MOD / OS_WORD above */
+#define OS_FIND               OS_MOD(F)
+#define OS_REFRESH            OS_MOD(R)
+#define OS_SELECT_ALL         OS_MOD(A)
+#define OS_UNDO               OS_MOD(Z)
+#define OS_REDO               OS_MOD(LS(Z))
+#define OS_CUT                OS_MOD(X)
+#define OS_COPY               OS_MOD(C)
+#define OS_PASTE              OS_MOD(V)
+#define OS_PASTE_PLAIN        OS_MOD(LS(V))
+#define OS_CLOSE              OS_MOD(W)
+#define OS_FOCUS_ADDR         OS_MOD(L)
+#define OS_FIND_NEXT          OS_MOD(G)
+#define OS_FIND_PREV          OS_MOD(LS(G))
+#define OS_WORD_LEFT          OS_WORD(LEFT)
+#define OS_WORD_RIGHT         OS_WORD(RIGHT)
+#define OS_WORD_SELECT_LEFT   OS_WORD(LS(LEFT))
+#define OS_WORD_SELECT_RIGHT  OS_WORD(LS(RIGHT))
+#define OS_WORD_DEL_BACK      OS_WORD(BSPC)
+#define OS_WORD_DEL_FWD       OS_WORD(DEL)
+
 /* Automatically generated layer name defines */
 #define LAYER_HRM_macOS 0
 #define LAYER_Typing 1
@@ -479,7 +521,7 @@ behaviors {
             #binding-cells = <0>;
             tap-ms = <1>;
             wait-ms = <1>;
-            bindings = <&kp LG(LS(RIGHT))>;
+            bindings = <&kp OS_SELTOLINEEND>;
         };
 
         // Cursor Layer - Extend Word (seq) - TailorKey
@@ -489,7 +531,7 @@ behaviors {
             #binding-cells = <0>;
             tap-ms = <1>;
             wait-ms = <1>;
-            bindings = <&kp LA(LS(RIGHT))>;
+            bindings = <&kp OS_WORD_SELECT_RIGHT>;
         };
 
         // Cursor Layer macos - Select Line (seq) - TailorKey
@@ -499,8 +541,8 @@ behaviors {
             #binding-cells = <0>;
             tap-ms = <1>;
             wait-ms = <1>;
-            bindings = <&kp LG(LEFT)>
-                , <&kp LG(LS(RIGHT))>;
+            bindings = <&kp OS_LINESTART>
+                , <&kp OS_SELTOLINEEND>;
         };
 
         // Cursor Layer - Select None (seq) - TailorKey
@@ -523,8 +565,8 @@ behaviors {
             #binding-cells = <0>;
             tap-ms = <1>;
             wait-ms = <1>;
-            bindings = <&kp LA(LEFT)>
-                , <&kp LA(LS(RIGHT))>;
+            bindings = <&kp OS_WORD_LEFT>
+                , <&kp OS_WORD_SELECT_RIGHT>;
         };
 
         // HRM_left_index_hold -> swich layer  - TailorKey
@@ -1476,14 +1518,14 @@ behaviors {
         // Alt Tab Switcher (Cursor Layer) - TailorKey
         combo_tabswitch_gui_v1_TKZ {
             key-positions = <POS_LH_T1 POS_LH_C1R4>;
-            bindings = <&mod_tab_chord_v2_TKZ LGUI LAYER_Cursor>;
+            bindings = <&mod_tab_chord_v2_TKZ OS_TASKSWITCH_MOD LAYER_Cursor>;
             layers = <LAYER_HRM_macOS LAYER_Typing LAYER_Autoshift>;
         };
 
         // Ctrl Tab Switcher (Cursor Layer) - TailorKey
         combo_tabswitch_ctrl_v1_TKZ {
             key-positions = <POS_LH_C2R5 POS_LH_C2R4>;
-            bindings = <&mod_tab_chord_v2_TKZ LGUI LAYER_Cursor>;
+            bindings = <&mod_tab_chord_v2_TKZ OS_TASKSWITCH_MOD LAYER_Cursor>;
             layers = <LAYER_HRM_macOS LAYER_Typing LAYER_Autoshift>;
         };
 
@@ -1708,12 +1750,12 @@ behaviors {
 
         layer_Cursor {
             bindings = <
- &kp PSCRN          &kp ESC         &kp INS     &kp LS(TAB)         &kp BSPC  &kp LG(F)                                                                                              &kp HOME     &kp PG_DN      &kp PG_UP            &kp END      &kp SLCK  &kp LC(LA(LS(LG(A))))
- &kp LG(R)  &kp PAUSE_BREAK       &kp LG(A)       &kp LG(Z)    &kp LS(LG(Z))  &kp LG(X)                                                                                               &kp DEL      &kp BSPC   &kp LA(BSPC)        &kp LA(DEL)       &kp TAB              &kp PSCRN
- &sk LSHFT        &kp LG(W)         &kp DEL    &kp LA(BSPC)      &kp LA(DEL)  &kp LG(C)                                                                                              &kp LEFT      &kp DOWN         &kp UP          &kp RIGHT     &kp K_APP              &sk RSHFT
- &sk LGUI         &kp LG(L)  &kp LG(LA(F8))  &kp LG(LA(F9))  &kp LG(LA(F17))  &kp LG(V)                                                                                      &kp LA(LS(LEFT))  &kp LA(LEFT)  &kp LA(RIGHT)  &kp LA(LS(RIGHT))  &kp LG(LEFT)          &kp LG(RIGHT)
-                             &kp LC(LA(LS(F11)))   &kp LS(LG(G))        &kp LG(G)                                                                                                                      &kp PG_DN  &kp PG_UP          &kp LG(G)
-                                                                                          &none   &none   &none  &kp LG(LEFT)  &kp LG(RIGHT)  &cur_EXTEND_WORD_macos_v1_TKZ
+ &kp PSCRN          &kp ESC         &kp INS     &kp LS(TAB)         &kp BSPC  &kp OS_FIND                                                                                              &kp HOME     &kp PG_DN      &kp PG_UP            &kp END      &kp SLCK  &kp LC(LA(LS(LG(A))))
+ &kp OS_REFRESH  &kp PAUSE_BREAK       &kp OS_SELECT_ALL       &kp OS_UNDO    &kp OS_REDO  &kp OS_CUT                                                                                               &kp DEL      &kp BSPC   &kp OS_WORD_DEL_BACK        &kp OS_WORD_DEL_FWD       &kp TAB              &kp PSCRN
+ &sk LSHFT        &kp OS_CLOSE         &kp DEL    &kp OS_WORD_DEL_BACK      &kp OS_WORD_DEL_FWD  &kp OS_COPY                                                                                              &kp LEFT      &kp DOWN         &kp UP          &kp RIGHT     &kp K_APP              &sk RSHFT
+ &sk LGUI         &kp OS_FOCUS_ADDR  &kp LG(LA(F8))  &kp LG(LA(F9))  &kp LG(LA(F17))  &kp OS_PASTE                                                                                      &kp OS_WORD_SELECT_LEFT  &kp OS_WORD_LEFT  &kp OS_WORD_RIGHT  &kp OS_WORD_SELECT_RIGHT  &kp OS_LINESTART          &kp OS_LINEEND
+                             &kp LC(LA(LS(F11)))   &kp OS_FIND_PREV        &kp OS_FIND_NEXT                                                                                                                      &kp PG_DN  &kp PG_UP          &kp OS_FIND_NEXT
+                                                                                          &none   &none   &none  &kp OS_LINESTART  &kp OS_LINEEND  &cur_EXTEND_WORD_macos_v1_TKZ
             >;
         };
 
@@ -1722,7 +1764,7 @@ behaviors {
                 &none     &kp F1     &kp F2     &kp F3     &kp F4         &kp F5                                                               &kp F6     &kp F7       &kp F8        &kp F9          &kp F10     &kp F11
               &kp TAB      &none     &trans     &trans     &trans         &trans                                                         &kp KP_MINUS  &kp KP_N7    &kp KP_N8     &kp KP_N9     &kp KP_SLASH     &kp F12
               &kp ESC     &trans     &trans     &trans     &trans         &trans                                                             &kp BSPC  &kp KP_N4    &kp KP_N5     &kp KP_N6  &kp KP_MULTIPLY  &kp KP_NUM
- &magic LAYER_Magic 0  &kp LG(Z)  &kp LG(X)  &kp LG(C)  &kp LG(V)  &kp LS(LG(V))                                                         &kp KP_ENTER  &kp KP_N1    &kp KP_N2     &kp KP_N3        &kp EQUAL       &to 0
+ &magic LAYER_Magic 0  &kp OS_UNDO  &kp OS_CUT  &kp OS_COPY  &kp OS_PASTE  &kp OS_PASTE_PLAIN                                                         &kp KP_ENTER  &kp KP_N1    &kp KP_N2     &kp KP_N3        &kp EQUAL       &to 0
                                       &none     &trans     &trans                                                                                      &kp KP_N0  &kp KP_PLUS  &kp KP_ENTER
                                                                                    &none  &trans  &trans  &trans  &kp KP_DOT  &kp KP_N0
             >;
@@ -1743,8 +1785,8 @@ behaviors {
             bindings = <
  &msc SCRL_LEFT  &msc SCRL_RIGHT                &none                &none                &none           &none                                                                     &none                &none                &none                &none      &none             &none
        &mkp MB4         &mkp MB5      &msc SCRL_RIGHT            &mkp LCLK            &mkp RCLK  &mmv MOVE_LEFT                                                                     &none            &sk RSHFT            &sk RCTRL             &sk RALT   &sk RGUI             &none
-         &tog 0           &trans               &trans               &trans               &trans       &kp LG(C)                                                              &mmv MOVE_UP  &mo LAYER_MouseFast  &mo LAYER_MouseWarp  &mo LAYER_MouseSlow  &mkp LCLK    &msc SCRL_LEFT
-          &none            &none  &mo LAYER_MouseSlow  &mo LAYER_MouseWarp  &mo LAYER_MouseFast       &kp LG(V)                                                                  &mkp MB4             &mkp MB5      &msc MOVE_Y(35)     &msc MOVE_Y(-35)  &mkp RCLK  &tog LAYER_Mouse
+         &tog 0           &trans               &trans               &trans               &trans       &kp OS_COPY                                                              &mmv MOVE_UP  &mo LAYER_MouseFast  &mo LAYER_MouseWarp  &mo LAYER_MouseSlow  &mkp LCLK    &msc SCRL_LEFT
+          &none            &none  &mo LAYER_MouseSlow  &mo LAYER_MouseWarp  &mo LAYER_MouseFast       &kp OS_PASTE                                                                  &mkp MB4             &mkp MB5      &msc MOVE_Y(35)     &msc MOVE_Y(-35)  &mkp RCLK  &tog LAYER_Mouse
                                      &tog LAYER_Mouse      &msc MOVE_Y(40)     &msc MOVE_Y(-40)                                                                                                   &tripleClick       &mmv MOVE_DOWN      &mmv MOVE_RIGHT
                                                                                                                  &trans  &trans  &trans  &mkp LCLK  &mkp RCLK  &doubleClick
             >;

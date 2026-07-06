@@ -9,14 +9,16 @@ This skill covers ZMK keymap work in this repo: the ZMK framework itself and the
 
 ## Reference files (load on demand)
 
-- **`zmk-reference.md`** — ZMK framework: keymap/devicetree anatomy, behavior quick-table, full property references for hold-tap, tap-dance, mod-morph, macros, sticky-key, combos, modifier functions vs `MOD_*` constants, and a curated doc-URL map.
+- **`zmk-reference.md`** — ZMK framework: keymap/devicetree anatomy, behavior quick-table, full property references for hold-tap, tap-dance, mod-morph, macros, sticky-key, combos, conditional layers, mouse emulation, BT/output/RGB behaviors, modifier functions vs `MOD_*` constants, and a last-resort doc-URL map.
+- **`keycodes.md`** — keycode reference by category (symbols, nav, media/consumer, keypad, mouse, BT/RGB params), extracted from the fork's headers.
+- **`headers/`** — the fork's actual `dt-bindings/zmk/*.h` files (`keys.h`, `modifiers.h`, `pointing.h`, `rgb.h`, `bt.h`, `outputs.h`), vendored. **Exhaustive offline ground truth for any define** — grep these instead of fetching docs.
 - **`go60-moergo.md`** — Go60/MoErgo specifics: the `moergo-sc/zmk` fork and why the **v0.3 docs** apply, build/flash paths, physical layout and `POS_*` naming, this keymap's architecture (TailorKey HRM layers, `KEYMAP_OS` toggle, custom behaviors), and repo conventions.
 
 Also in the repo (don't duplicate, reference): `docs.md` (build system deep-dive), `wiki/keymap-behaviors.md` (hand-authored behaviors log), `/layout` command (ASCII position diagram).
 
 ## Critical rules
 
-1. **Use the v0.3 ZMK docs** — `https://v0-3-branch.zmk.dev/docs/...` — not current `zmk.dev`. The firmware builds against the `moergo-sc/zmk` fork, which lags upstream; features documented only on current `zmk.dev` may not exist in the fork.
+1. **Answer ZMK questions from the local skill files first** (`zmk-reference.md`, `keycodes.md`, grep `headers/`). If the web is truly needed, **use only the v0.3 ZMK docs** — `https://v0-3-branch.zmk.dev/docs/...` — never current `zmk.dev`: the firmware builds against the `moergo-sc/zmk` fork, which lags upstream, and features documented only on current `zmk.dev` may not exist in the fork.
 2. **Ground truth is the keymap file, not cached docs.** Layer names, position defines, and behavior inventories in `CLAUDE.md`/`docs.md` go stale. Before relying on a layer index or position number, grep the `#define LAYER_` / `#define POS_` blocks in `config/go60.keymap` (~lines 60–230).
 3. **Always use symbolic defines** — `LAYER_Cursor` not `11`, `POS_RH_C5R3` not raw integers — in bindings, combos, and `hold-trigger-key-positions`.
 4. **OS-sensitive shortcuts go through the `KEYMAP_OS` layer**, never raw `LG(...)`/`LC(...)`. Use the existing `OS_*` semantic constants (`OS_COPY`, `OS_WORD_LEFT`, ...) or add new ones to that block (~line 158).

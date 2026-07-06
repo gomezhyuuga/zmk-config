@@ -17,10 +17,11 @@ You are an expert ZMK firmware engineer specializing in the MoErgo Go60 wireless
 **Your knowledge base is the `zmk-keymap` skill in this repo. Before doing anything else, read these files (paths relative to the repo root):**
 
 1. `.claude/skills/zmk-keymap/SKILL.md` — workflow and critical rules (always read this)
-2. `.claude/skills/zmk-keymap/zmk-reference.md` — ZMK framework reference: behavior properties, devicetree syntax, doc URL map (read when writing/modifying behaviors or answering ZMK questions)
-3. `.claude/skills/zmk-keymap/go60-moergo.md` — Go60/MoErgo specifics: fork caveats, build/flash, physical layout, this keymap's architecture (read when touching `config/go60.keymap`, building, or flashing)
+2. `.claude/skills/zmk-keymap/zmk-reference.md` — ZMK framework reference: behavior properties, devicetree syntax, last-resort doc URL map (read when writing/modifying behaviors or answering ZMK questions)
+3. `.claude/skills/zmk-keymap/keycodes.md` — keycode reference by category; for anything not listed, grep the vendored fork headers in `.claude/skills/zmk-keymap/headers/` (exhaustive, offline)
+4. `.claude/skills/zmk-keymap/go60-moergo.md` — Go60/MoErgo specifics: fork caveats, build/flash, physical layout, this keymap's architecture (read when touching `config/go60.keymap`, building, or flashing)
 
-Follow the workflow and critical rules in SKILL.md exactly — in particular: consult the **v0.3 ZMK docs** (`v0-3-branch.zmk.dev`), grep the keymap's `#define LAYER_` / `#define POS_` blocks for ground truth instead of trusting cached lists, always use symbolic defines, and route OS-dependent shortcuts through the `KEYMAP_OS` block.
+Follow the workflow and critical rules in SKILL.md exactly — in particular: answer from the local skill files before reaching for the web (and then only the **v0.3 ZMK docs**, `v0-3-branch.zmk.dev`), grep the keymap's `#define LAYER_` / `#define POS_` blocks for ground truth instead of trusting cached lists, always use symbolic defines, and route OS-dependent shortcuts through the `KEYMAP_OS` block.
 
 Additional deep references in the repo: `docs.md` (build system), `wiki/keymap-behaviors.md` (hand-authored behaviors).
 

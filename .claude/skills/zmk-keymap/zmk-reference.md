@@ -1,6 +1,8 @@
 # ZMK Framework Reference
 
-Core ZMK knowledge for keymap work. Verified against the **v0.3 docs** (`v0-3-branch.zmk.dev`), which match the `moergo-sc/zmk` fork this repo builds against. When a detail isn't covered here, fetch the URL from the map at the bottom — always the v0-3-branch host.
+Core ZMK knowledge for keymap work. Verified against the **v0.3 docs** (`v0-3-branch.zmk.dev`), which match the `moergo-sc/zmk` fork this repo builds against.
+
+**Resolve questions offline first**: keycodes and behavior parameters are in `keycodes.md` and the vendored fork headers in `headers/` (grep those — they are exact ground truth). Only fetch a URL from the map at the bottom when the local files genuinely don't cover the topic — and then always the v0-3-branch host.
 
 ## Keymap file anatomy
 
@@ -167,18 +169,64 @@ skq: skq {
 }; };
 ```
 
+## Conditional layers (`zmk,conditional-layers`)
+
+Activate a layer automatically whenever a set of other layers is active (tri-layer):
+
+```dts
+/ { conditional_layers {
+    compatible = "zmk,conditional-layers";
+    tri_layer {
+        if-layers = <LAYER_Cursor LAYER_Symbol>;  // when ALL of these are active...
+        then-layer = <LAYER_Keypad>;              // ...this one activates too
+    };
+}; };
+```
+
+The `then-layer` should be *higher-numbered* than every `if-layers` entry so it wins binding lookups. Conditional layers can chain (a then-layer may satisfy another rule's if-layers).
+
+## Mouse emulation (`&mkp` / `&mmv` / `&msc`)
+
+Requires `CONFIG_ZMK_POINTING=y`, `#include <dt-bindings/zmk/pointing.h>`, `#include <input/processors.dtsi>`. Parameter constants in `keycodes.md` § Mouse (buttons `MB1`–`MB5`, `MOVE_*`, `SCRL_*`, custom `MOVE_X/Y(n)`).
+
+Tune speed/acceleration by overriding the built-in behavior nodes at file top level:
+
+```dts
+&mmv { time-to-max-speed-ms = <300>; acceleration-exponent = <1>; };
+&msc { time-to-max-speed-ms = <40>;  acceleration-exponent = <0>; };
+```
+
+This keymap also overrides `&mmv_input_listener` / `&msc_input_listener` (~line 244–270 of `go60.keymap`) with per-layer input processors — e.g. scaling the move speed on the MouseSlow/MouseFast layers via `zmk,input-processor-scaler`.
+
+## Caps word & key repeat tweaks
+
+Override the built-in nodes to change what keeps caps-word alive, or which HID pages key-repeat captures:
+
+```dts
+&caps_word { continue-list = <UNDERSCORE MINUS BSPC>; };  // defaults: alphas, numbers, UNDER, BSPC, DEL
+&key_repeat { usage-pages = <HID_USAGE_KEY HID_USAGE_CONSUMER>; };
+```
+
+## Bluetooth, output & RGB behaviors
+
+- `&bt BT_SEL n` selects BLE profile *n* (0-based); `BT_DISC n` disconnects one; `BT_NXT`/`BT_PRV` cycle; `BT_CLR` unpairs the **active** profile; `BT_CLR_ALL` unpairs everything. Selecting a profile doesn't switch output — pair with `&out OUT_BLE` (this keymap's `bt_0`–`bt_3` tap-dances do both).
+- `&out OUT_USB` / `OUT_BLE` / `OUT_TOG` routes HID output.
+- `&rgb_ug <cmd>` — full command list in `keycodes.md` § Behavior parameters, incl. the fork-only `RGB_STATUS`.
+
 ## Modifiers: functions vs constants
 
 - **`LS()/LC()/LA()/LG()` (+ `RS/RC/RA/RG`)** wrap a *keycode* with a modifier — used anywhere a keycode goes: `&kp LC(LS(TAB))`. They nest. Rollover-safe: the implicit mods release when another key is pressed.
 - **`MOD_LSFT`, `MOD_LCTL`, `MOD_LALT`, `MOD_LGUI` (+ `R` variants)** are *bitmask constants* from `dt-bindings/zmk/modifiers.h` — used only in bitmask properties like mod-morph's `mods`/`keep-mods`, OR-ed together: `<(MOD_LSFT|MOD_RSFT)>`.
 - Bare modifier keycodes (`LSHIFT`, `LCTRL`, `LALT`, `LGUI`, ...) are ordinary keycodes for `&kp`/`&mt`/`&sk` params.
-- Many shifted symbols have pre-built keycodes (`DQT` = `LS(SQT)`, `COLON` = `LS(SEMI)`, `DLLR` = `LS(N4)`) — prefer them for readability.
+- Many shifted symbols have pre-built keycodes (`DQT` = `LS(SQT)`, `COLON` = `LS(SEMI)`, `DLLR` = `LS(N4)`) — prefer them for readability. Full table in `keycodes.md`; exact definitions in `headers/modifiers.h`.
 
 ## Kconfig (`.conf`)
 
 One `CONFIG_X=y` (or `=<n>`) per line; passed to the Zephyr build. Common: `CONFIG_ZMK_SLEEP=y`, `CONFIG_ZMK_IDLE_SLEEP_TIMEOUT=<ms>`, `CONFIG_BT_CTLR_TX_PWR_PLUS_8=y`, `CONFIG_ZMK_RGB_UNDERGLOW_*`, `CONFIG_ZMK_POINTING=y`, `CONFIG_ZMK_MACRO_DEFAULT_WAIT_MS/TAP_MS`, `CONFIG_ZMK_BEHAVIORS_QUEUE_SIZE`. Full list: config docs URL below.
 
-## Doc URL map (always the v0-3-branch host)
+## Doc URL map (last resort — always the v0-3-branch host)
+
+Fetch only when this file, `keycodes.md`, and the `headers/` files don't answer the question.
 
 | Topic | URL |
 |---|---|
@@ -194,6 +242,6 @@ One `CONFIG_X=y` (or `=<n>`) per line; passed to the Zephyr build. Common: `CONF
 | Combos | https://v0-3-branch.zmk.dev/docs/keymaps/combos |
 | Conditional layers | https://v0-3-branch.zmk.dev/docs/keymaps/conditional-layers |
 | Modifiers | https://v0-3-branch.zmk.dev/docs/keymaps/modifiers |
-| Keycode list | https://v0-3-branch.zmk.dev/docs/keymaps/list-of-keycodes |
+| Keycode list (prefer `keycodes.md` / `headers/keys.h`) | https://v0-3-branch.zmk.dev/docs/keymaps/list-of-keycodes |
 | Input processors | https://v0-3-branch.zmk.dev/docs/keymaps/input-processors |
 | Kconfig reference | https://v0-3-branch.zmk.dev/docs/config |

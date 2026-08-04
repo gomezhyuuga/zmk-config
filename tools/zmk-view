@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Native KDE/Qt viewer for the Go60 layer layout (output/layout.html).
+# Symlink this into ~/.local/bin as `zmk-view`.
+#
+#   zmk-view
+#
+# Regenerates output/layout.html from keymap.yaml if it's missing or stale,
+# then opens it in a native PyQt6 QWebEngineView window (Escape to close).
+#
+# Requires (Fedora): dnf install python3-pyqt6 python3-pyqt6-webengine
+set -euo pipefail
+
+SELF="$(readlink -f "${BASH_SOURCE[0]}")"
+ROOT="$(cd "$(dirname "$SELF")/.." && pwd)"
+
+HTML="$ROOT/output/layout.html"
+YAML="$ROOT/keymap-drawer/keymap.yaml"
+
+if [[ ! -f "$HTML" || "$YAML" -nt "$HTML" ]]; then
+  echo "zmk-view: regenerating $HTML" >&2
+  python3 "$ROOT/tools/gen-layout-html.py"
+fi
+
+exec python3 "$ROOT/tools/show-layers-kde.py" "$@"

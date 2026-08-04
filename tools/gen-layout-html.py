@@ -142,7 +142,8 @@ def apply_label_overrides(layers, keys_geo, overrides):
                 if keys[i]["kind"] in ("blank", "trans"):
                     continue
                 text = spec
-            keys[i].update(tap=text, hold="", custom=True)
+            orig = keys[i]["tap"] + (f" ({keys[i]['hold']})" if keys[i]["hold"] else "")
+            keys[i].update(tap=text, hold="", custom=True, orig=orig)
 
 
 def main():
@@ -246,6 +247,16 @@ TEMPLATE = r"""<!DOCTYPE html>
   .key.blank { opacity:.5; }
   /* custom labels (LABEL_OVERRIDES). Neutral by default — style to taste, e.g.:
      .key.custom .tap { color:#cdd6e6; font-style:italic; } */
+  /* instant hover tooltip showing the pre-override label (data-orig) — CSS only, no delay */
+  .key.custom::after {
+    content: attr(data-orig);
+    position: absolute; left: 50%; bottom: calc(100% + 6px); transform: translateX(-50%);
+    background: #05070b; color: var(--text); border: 1px solid var(--edge);
+    padding: 2px 6px; border-radius: 5px; font-size: 10px; white-space: nowrap;
+    pointer-events: none; opacity: 0; z-index: 20;
+  }
+  .key.custom:hover { overflow: visible; z-index: 20; }
+  .key.custom:hover::after { opacity: 1; }
   .pos { position:absolute; top:2px; right:4px; font-size:7px; color:#8b97ad; }
 
   .navbar {
@@ -366,6 +377,7 @@ function buildBoard(name) {
     const g = DATA.geo[idx];
     const el = document.createElement("div");
     el.className = "key " + k.kind + (k.custom ? " custom" : "");
+    if (k.custom && k.orig) el.dataset.orig = k.orig;
     el.style.left = (g.x * UNIT) + "px";
     el.style.top  = (g.y * UNIT) + "px";
     if (g.r) {

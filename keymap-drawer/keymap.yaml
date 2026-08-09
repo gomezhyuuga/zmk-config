@@ -35,7 +35,7 @@ layers:
   - {t: J, h: '&HRM_right_index_hold_v1B_TKZ RSHFT'}
   - {t: K, h: '&HRM_right_middy_hold_v1B_TKZ RGUI'}
   - {t: L, h: '&HRM_right_ring_hold_v1B_TKZ LALT'}
-  - {t: Sft+;, h: '&HRM_right_pinky_hold_v1B_TKZ RCTRL'}
+  - {t: Sft+;, h: '&HRM_right_pinky_hold_v1B_TKZ RCTRL', s: ;}
   - {t: '''', h: Gui+LSHFT}
   - {t: '&rgb_ug_status_macro', h: Magic}
   - Z
@@ -751,19 +751,19 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - KP MINUS
+  - BSPC
   - KP 7
   - KP 8
   - KP 9
   - KP SLASH
   - F12
   - ESC
+  - LCTRL
+  - LALT
+  - LGUI
+  - LSHFT
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - BSPC
+  - KP MINUS
   - KP 4
   - KP 5
   - KP 6
@@ -775,7 +775,7 @@ layers:
   - Ctl+C
   - Ctl+V
   - Ctl+Sft+V
-  - KP ENTER
+  - KP DOT
   - KP 1
   - KP 2
   - KP 3
@@ -791,7 +791,7 @@ layers:
   - {type: held}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - KP DOT
+  - KP ENTER
   - KP 0
   Symbol:
   - \

@@ -56,6 +56,27 @@ standard Unicode that the system font renders): `⌘` Cmd, `⌥` Opt, `⇧` Shif
 holds (which arrive as `behavior_name MOD`) collapse to just the modifier glyph. The mapping
 lives in `MOD_SYMBOLS` / `KEY_SYMBOLS` / `symbolize()` in `gen-layout-html.py`.
 
+## Nerd Font icons
+
+Custom labels in `config/layout-view.json` can use Nerd Font icons (` `, ` `, …). Those
+live in the Unicode private-use areas, where normal system fonts have no glyph — so the
+generator subsets an installed Nerd Font down to *only* the icons in use and inlines it as a
+woff2 data URI. Two icons cost ~2 KB, and the page stays self-contained: it renders the same
+on machines with no Nerd Font installed.
+
+Detection is automatic (via `fc-match`, trying Symbols Nerd Font → JetBrainsMono → Iosevka →
+CaskaydiaCove → FiraCode → Hack, picking the first that has every icon). To pin one:
+
+```json
+"font": { "family": "Iosevka Nerd Font" }
+"font": { "file": "~/.local/share/fonts/MyNerdFont.ttf" }
+```
+
+Requires `fonttools` and `brotli` (`pip install fonttools brotli`). Without them — or with no
+Nerd Font installed — generation still succeeds and prints a warning; icons then fall back to
+a locally installed *Symbols Nerd Font*, or show as boxes. Only the private-use range comes
+from the embedded font, so regular text still uses the system sans stack.
+
 ## Keeping it fresh
 
 After editing `config/go60.keymap`, run `make draw && make layout-html` to regenerate both

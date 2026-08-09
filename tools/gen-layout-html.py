@@ -13,9 +13,12 @@ Unlike the SVG renderer this handles multi-line legends and CSS styling. Re-run
 after editing the keymap (run ./draw.sh first to refresh keymap.yaml).
 """
 
+import base64
+import io
 import json
 import html
 import pathlib
+import subprocess
 
 import yaml
 
@@ -146,6 +149,113 @@ def apply_label_overrides(layers, keys_geo, overrides):
             keys[i].update(tap=text, hold="", custom=True, orig=orig)
 
 
+# --- Nerd Font icons --------------------------------------------------------
+# Custom labels in layout-view.json may use Nerd Font icons, which live in the
+# Unicode private-use areas where ordinary system fonts have no glyphs. Subset a
+# locally installed Nerd Font down to the icons actually used and inline it as a
+# data: URI, so the page keeps rendering them on machines without the font.
+
+# Tried in order; the first one fontconfig resolves to a real Nerd Font wins.
+NERD_FAMILIES = [
+    "Symbols Nerd Font Mono",
+    "Symbols Nerd Font",
+    "JetBrainsMono Nerd Font",
+    "Iosevka Nerd Font",
+    "CaskaydiaCove Nerd Font",
+    "FiraCode Nerd Font",
+    "Hack Nerd Font",
+]
+
+
+def pua_codepoints(text):
+    """Private-use codepoints in `text` — Nerd Font icon territory."""
+    return {
+        cp for cp in map(ord, set(text))
+        if 0xE000 <= cp <= 0xF8FF or 0xF0000 <= cp <= 0xFFFFD
+    }
+
+
+def nerd_font_paths(preferred=None):
+    """Installed Nerd Font files, best candidates first."""
+    paths = []
+    for family in ([preferred] if preferred else []) + NERD_FAMILIES:
+        try:
+            out = subprocess.run(
+                ["fc-match", "-f", "%{file}\t%{family}", family],
+                capture_output=True, text=True, timeout=5,
+            ).stdout
+        except (OSError, subprocess.SubprocessError):
+            return []
+        path, _, fam = out.partition("\t")
+        # fc-match always answers with *something*; only trust an actual Nerd Font.
+        if path and "Nerd" in fam and path not in paths:
+            paths.append(path)
+    return [pathlib.Path(p) for p in paths]
+
+
+def nerd_font_css(text, cfg):
+    """@font-face rule embedding just the icons `text` uses, or "" if not needed."""
+    codepoints = pua_codepoints(text)
+    if not codepoints:
+        return ""
+
+    try:
+        import logging
+        from fontTools import subset
+        logging.getLogger("fontTools.subset").setLevel(logging.ERROR)  # "PfEd NOT subset" chatter
+    except ImportError:
+        print("  ! fontTools not installed — icons need a local Nerd Font (pip install fonttools brotli)")
+        return ""
+
+    if cfg.get("file"):
+        candidates = [pathlib.Path(cfg["file"]).expanduser()]
+        no_font = f"  ! {cfg['file']} not found — icon labels will show as boxes"
+    else:
+        candidates = nerd_font_paths(cfg.get("family"))
+        no_font = "  ! no Nerd Font installed — icon labels will show as boxes"
+    if not candidates:
+        print(no_font)
+        return ""
+
+    opts = subset.Options(flavor="woff2", ignore_missing_unicodes=True)
+    best = None  # (missing, path, font) — first font covering everything wins
+    for path in candidates:
+        if not path.exists():
+            continue
+        font = subset.load_font(str(path), opts)
+        missing = codepoints - set(font.getBestCmap())
+        if best is None or len(missing) < len(best[0]):
+            if best:
+                best[2].close()
+            best = (missing, path, font)
+        else:
+            font.close()
+        if not missing:
+            break
+    if best is None:
+        print(no_font)
+        return ""
+
+    missing, path, font = best
+    subsetter = subset.Subsetter(options=opts)
+    subsetter.populate(unicodes=codepoints)
+    subsetter.subset(font)
+
+    buf = io.BytesIO()
+    subset.save_font(font, buf, opts)
+    font.close()
+
+    if missing:
+        print(f"  ! {path.name} lacks {', '.join(f'U+{cp:04X}' for cp in sorted(missing))}")
+    print(f"  · embedded {len(codepoints) - len(missing)} icon(s) from {path.name} ({len(buf.getvalue()) // 1024 or 1} KB)")
+
+    b64 = base64.b64encode(buf.getvalue()).decode("ascii")
+    return (
+        '@font-face { font-family:"NerdIcons"; font-display:block;\n'
+        f'    src:url(data:font/woff2;base64,{b64}) format("woff2"); }}'
+    )
+
+
 def main():
     keymap = yaml.safe_load(KEYMAP_YAML.read_text())
     info = json.loads(INFO_JSON.read_text())
@@ -175,7 +285,9 @@ def main():
     payload = json.dumps(data, ensure_ascii=False)
 
     OUT_HTML.parent.mkdir(parents=True, exist_ok=True)
-    OUT_HTML.write_text(TEMPLATE.replace("/*DATA*/", payload))
+    page = TEMPLATE.replace("/*DATA*/", payload)
+    page = page.replace("/*FONT*/", nerd_font_css(payload, view_cfg.get("font", {})))
+    OUT_HTML.write_text(page)
     print(f"→ {OUT_HTML.relative_to(ROOT)}  ({len(layers)} layers)")
 
 
@@ -186,6 +298,7 @@ TEMPLATE = r"""<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Go60 Layout</title>
 <style>
+  /*FONT*/
   :root {
     --bg:#0f1115; --panel:#171a21; --key:#232834; --edge:#2e3645;
     --text:#e7ecf3; --muted:#8a93a6;
@@ -198,7 +311,9 @@ TEMPLATE = r"""<!DOCTYPE html>
   html { zoom:var(--zoom); }
   body {
     margin:0; color:var(--text);
-    font-family:ui-sans-serif,-apple-system,"SF Pro Text","Segoe UI",Roboto,sans-serif;
+    /* NerdIcons/Symbols carry only private-use icons, so text falls through to the sans stack. */
+    font-family:"NerdIcons","Symbols Nerd Font Mono","Symbols Nerd Font",
+                ui-sans-serif,-apple-system,"SF Pro Text","Segoe UI",Roboto,sans-serif;
     background:radial-gradient(1200px 700px at 50% -10%,#1a1f2b,var(--bg));
     padding:24px 16px;
     /* divide out the zoom so 100vh maps to the real viewport (no phantom scrollbar) */
@@ -228,10 +343,15 @@ TEMPLATE = r"""<!DOCTYPE html>
     padding:3px; text-align:center; overflow:hidden;
     box-shadow:0 2px 0 #00000055, inset 0 1px 0 #ffffff08;
   }
-  .key .tap { font-size:12px; font-weight:600; line-height:1.05; word-break:break-word; }
+  /* pre-wrap so spacing inside custom labels (e.g. "<icon>  desk") survives; still wraps. */
+  .key .tap {
+    font-size:12px; font-weight:600; line-height:1.05;
+    word-break:break-word; white-space:pre-wrap;
+  }
   .key .hold {
     font-size:8.5px; line-height:1.05; margin-top:2px; letter-spacing:.2px;
-    color:var(--c-dual); text-transform:uppercase; word-break:break-word;
+    color:var(--c-dual); text-transform:uppercase;
+    word-break:break-word; white-space:pre-wrap;
   }
   /* per-modifier accent colors (used in key labels and the legend) */
   .m-cmd { color:var(--m-cmd); } .m-opt { color:var(--m-opt); }

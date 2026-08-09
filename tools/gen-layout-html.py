@@ -152,10 +152,15 @@ def apply_label_overrides(layers, keys_geo, overrides):
 # --- Nerd Font icons --------------------------------------------------------
 # Custom labels in layout-view.json may use Nerd Font icons, which live in the
 # Unicode private-use areas where ordinary system fonts have no glyphs. Subset a
-# locally installed Nerd Font down to the icons actually used and inline it as a
-# data: URI, so the page keeps rendering them on machines without the font.
+# Nerd Font down to the icons actually used and inline it as a data: URI, so the
+# page keeps rendering them on machines without the font.
 
-# Tried in order; the first one fontconfig resolves to a real Nerd Font wins.
+# The vendored symbols-only font (see tools/fonts/README.md) is the default source:
+# it makes output identical everywhere and needs no network or installed fonts.
+VENDORED_FONT = ROOT / "tools" / "fonts" / "SymbolsNerdFontMono-Regular.woff2"
+
+# Fallback if the vendored file is gone. First family fontconfig resolves to a
+# real Nerd Font wins.
 NERD_FAMILIES = [
     "Symbols Nerd Font Mono",
     "Symbols Nerd Font",
@@ -210,9 +215,12 @@ def nerd_font_css(text, cfg):
     if cfg.get("file"):
         candidates = [pathlib.Path(cfg["file"]).expanduser()]
         no_font = f"  ! {cfg['file']} not found — icon labels will show as boxes"
+    elif cfg.get("family"):
+        candidates = nerd_font_paths(cfg["family"])
+        no_font = f"  ! no font matching {cfg['family']!r} — icon labels will show as boxes"
     else:
-        candidates = nerd_font_paths(cfg.get("family"))
-        no_font = "  ! no Nerd Font installed — icon labels will show as boxes"
+        candidates = [VENDORED_FONT] + nerd_font_paths()
+        no_font = "  ! no Nerd Font available — icon labels will show as boxes"
     if not candidates:
         print(no_font)
         return ""

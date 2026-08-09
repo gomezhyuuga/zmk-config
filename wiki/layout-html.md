@@ -64,8 +64,12 @@ generator subsets an installed Nerd Font down to *only* the icons in use and inl
 woff2 data URI. Two icons cost ~2 KB, and the page stays self-contained: it renders the same
 on machines with no Nerd Font installed.
 
-Detection is automatic (via `fc-match`, trying Symbols Nerd Font → JetBrainsMono → Iosevka →
-CaskaydiaCove → FiraCode → Hack, picking the first that has every icon). To pin one:
+The icons come from a **vendored** symbols-only Nerd Font at
+`tools/fonts/SymbolsNerdFontMono-Regular.woff2` (10410 icons, 1.1 MB — see
+[its README](../tools/fonts/README.md) for provenance and how to update it). Vendoring it
+rather than linking a CDN or reading the system font means generation works offline and
+produces identical output on every machine. If that file is missing, the generator falls back
+to `fc-match` over installed Nerd Fonts. To pin a different source:
 
 ```json
 "font": { "family": "Iosevka Nerd Font" }
@@ -73,8 +77,8 @@ CaskaydiaCove → FiraCode → Hack, picking the first that has every icon). To 
 ```
 
 Requires `fonttools` and `brotli` (`pip install fonttools brotli`). Without them — or with no
-Nerd Font installed — generation still succeeds and prints a warning; icons then fall back to
-a locally installed *Symbols Nerd Font*, or show as boxes. Only the private-use range comes
+font available — generation still succeeds and prints a warning; icons then fall back to a
+locally installed *Symbols Nerd Font*, or show as boxes. Only the private-use range comes
 from the embedded font, so regular text still uses the system sans stack.
 
 ## Keeping it fresh

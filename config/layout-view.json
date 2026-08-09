@@ -1,7 +1,7 @@
 {
   "_comment": "Config for the Go60 HTML layout viewer (tools/gen-layout-html.py). Run `make html` after editing. Top-level keys are namespaced sections; underscore-prefixed keys are ignored.",
   "_labels_format": "labels maps a physical position to a custom legend. \"POS\": \"text\" relabels every layer where the key is active (skips transparent/blank). \"POS\": {\"LayerName\": \"text\"} targets specific layers only. Positions use the info.json scheme, e.g. R_C3R2. Labels may contain Nerd Font icons — the generator subsets an installed Nerd Font down to the icons used and inlines it, so the page stays self-contained.",
-  "_font_format": "font (optional) picks which Nerd Font supplies the icons: {\"family\": \"Iosevka Nerd Font\"} resolved via fontconfig, or {\"file\": \"~/path/Font.ttf\"} for an exact file. Omit to auto-detect.",
+  "_font_format": "font (optional) overrides which Nerd Font supplies the icons: {\"family\": \"Iosevka Nerd Font\"} resolved via fontconfig, or {\"file\": \"~/path/Font.ttf\"} for an exact file. Omit to use the vendored tools/fonts/SymbolsNerdFontMono-Regular.woff2.",
   "labels": {
     "R_C3R2": { "fn": "👁️ kbd" },
     "R_C2R3": { "fn": "  desk" },

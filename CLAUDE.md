@@ -8,13 +8,13 @@ User-level ZMK firmware configuration for the MoErgo Go60 wireless split keyboar
 
 ## Build
 
-Three equivalent ways to build firmware. All produce `go60.uf2` (combined left+right image).
+Two equivalent ways to build firmware. Both produce `go60.uf2` (combined left+right image).
+Builds are local only — this repo has no CI; the GitHub Actions workflows were removed in `d1a4e57`.
 
-- **GitHub Actions** (primary workflow): any push triggers `.github/workflows/build.yml`. It checks out `moergo-sc/zmk@main` into `src/` alongside this repo, then runs `nix-build config -o combined`. Artifact `go60.uf2` is attached to the workflow run.
-- **Local via Docker**: `./build.sh [branch]` (or `build.bat` on Windows). Builds the `Dockerfile` image, which mirrors `moergo-sc/zmk`, checks out `$BRANCH` (default `main`), and runs the nix build. Output `go60.uf2` is written into the repo root with the host user's UID/GID. The image pre-warms the nix store with `main` plus the three most recent tags, and uses the `moergo-glove80-zmk-dev` cachix cache.
+- **Local via Docker** (primary): `./build.sh [branch]` (or `build.bat` on Windows). Builds the `Dockerfile` image, which mirrors `moergo-sc/zmk`, checks out `$BRANCH` (default `main`), and runs the nix build. Output `go60.uf2` is written into the repo root with the host user's UID/GID. The image pre-warms the nix store with `main` plus the three most recent tags, and uses the `moergo-glove80-zmk-dev` cachix cache.
 - **Local via nix directly** (requires a sibling checkout of `moergo-sc/zmk` at `../src` or passing `--arg firmware`): `nix-build ./config --arg firmware 'import /path/to/zmk/default.nix {}' -o combined`.
 
-To target a different ZMK branch/tag locally, pass it as the first arg to `build.sh`. In CI the ZMK ref is pinned in the workflow file (`ref: main`).
+To target a different ZMK branch/tag, pass it as the first arg to `build.sh`.
 
 ## Architecture
 

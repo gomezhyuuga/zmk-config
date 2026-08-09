@@ -14,7 +14,7 @@ This repo is the official ZMK configuration of the MoErgo Go60 wireless split ke
 
 **NOTE: You can also customize the layout of your Go60 keyboard with the Go60 Layout Editor webapp. For most users Go60 Layout Editor is the recommended and simpler option. More information is available at the official MoErgo Go60 Support site (see resources below).**
 
-These steps will get you using your keymap on your keyboard in the fastest time possible. It uses the GitHub Actions feature to build your firmware online.
+These steps will get you using your keymap on your keyboard in the fastest time possible. This fork builds firmware locally (via Docker or Nix) rather than online — it has no GitHub Actions workflows.
 
 If you are looking to dig deeper into ZMK and develop new functionality, it is recommended to follow the steps of installing ZMK as found on the official ZMK documentation site (linked below).
 
@@ -31,15 +31,12 @@ If you are looking to dig deeper into ZMK and develop new functionality, it is r
 1. Log into, or sign up for, your personal GitHub account.
 2. Create your own repository using this repository as a template ([instructions](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template)) and check it out on your local computer.
 3. Edit the keymap file(s) to suit your needs
-4. Commit and push your changes to your personal repo. Upon pushing it, GitHub Actions will start building a new version of your firmware with the updated keymap.
+4. Run `./build.sh` to build a new version of your firmware with the updated keymap. See `docs.md` for the Nix alternative and build options.
 
 ## Firmware Files
-To locate your firmware files and reflash your Go60...
-1. log into GitHub and navigate to your personal config repository you just uploaded your keymap changes to.
-2. Click "Actions" in the main navigation, and in the left navigation click the "Build" link.
-3. Select the desired workflow run in the centre area of the page (based on date and time of the build you wish to use). You can also start a new build from this page by clicking the "Run workflow" button.
-4. After clicking the desired workflow run, you should be presented with a section at the bottom of the page called "Artifacts". This section contains the results of your build, in a file called "go60.uf2"
-5. Download the go60.uf2
-6. Flash the firmware to Go60 according to the user documentation on the official Go60 Support website (linked above)
+To build your firmware and reflash your Go60...
+1. Run `./build.sh` from the repo root. It builds in Docker and writes `go60.uf2` into the repo root.
+2. Flash it with `./flash.sh`, which rebuilds and copies `go60.uf2` onto the mounted bootloader drive.
+3. Alternatively, copy `go60.uf2` to the bootloader drive by hand, according to the user documentation on the official Go60 Support website (linked above)
 
 Your keyboard is now ready to use.

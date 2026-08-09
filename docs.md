@@ -1,6 +1,6 @@
 # Go60 ZMK Config — Project Documentation
 
-In-depth reference for working on this repository. For end-user instructions (template, GitHub Actions artifact, flashing) see `README.md`.
+In-depth reference for working on this repository. For end-user instructions (template, building, flashing) see `README.md`.
 
 ## Repository purpose
 
@@ -10,7 +10,7 @@ User-level ZMK firmware configuration for the **MoErgo Go60** wireless split key
 - a Kconfig file (`config/go60.conf`)
 - a physical layout description (`config/info.json`)
 - a small Nix entrypoint (`config/default.nix`)
-- build wrappers and CI
+- build wrappers
 
 These files are consumed by the upstream ZMK tree to produce a single combined-hands `go60.uf2` firmware image.
 
@@ -23,9 +23,6 @@ These files are consumed by the upstream ZMK tree to produce a single combined-h
 │   ├── go60.keymap       # Devicetree keymap (the file you edit most)
 │   ├── go60.conf         # Kconfig flags for the Zephyr build
 │   └── info.json         # Physical layout (for visualizers, not the build)
-├── .github/workflows/
-│   ├── build.yml         # Builds firmware on every push, attaches go60.uf2
-│   └── draw.yml          # Renders keymap.svg on keymap changes
 ├── keymap-drawer/        # Generated visualization (yaml + svg)
 ├── Dockerfile            # Local build environment
 ├── build.sh / build.bat  # Run a local Docker build
@@ -47,20 +44,10 @@ This separation is why building locally requires either Docker (which clones ZMK
 
 ## Build paths
 
-All three paths produce the same `go60.uf2` (combined left + right image).
+Both paths produce the same `go60.uf2` (combined left + right image). Builds are local only —
+this repo has no CI (the GitHub Actions workflows were removed in `d1a4e57`).
 
-### A. GitHub Actions (default)
-
-Pushing any commit triggers `.github/workflows/build.yml`, which:
-
-1. Checks out this repo and `moergo-sc/zmk@main` into `src/`.
-2. Installs Nix and wires up the `moergo-glove80-zmk-dev` Cachix cache (so prebuilt Zephyr artifacts download instead of compile).
-3. Runs `nix-build config -o combined`.
-4. Uploads `go60.uf2` as a workflow artifact.
-
-To consume: open the run, scroll to **Artifacts**, download `go60.uf2`.
-
-### B. Local Docker (`./build.sh`)
+### A. Local Docker (`./build.sh`)
 
 ```bash
 ./build.sh                # build against ZMK main
@@ -76,7 +63,7 @@ How it works:
 - A named Docker volume (`go60-zmk-nix-store`) is mounted at `/nix` so the Nix store **persists across runs**. First run populates it from Cachix; later runs are dramatically faster.
 - The entrypoint checks out the requested ZMK ref, runs `nix-build` with `-j$(nproc) --cores 8`, and copies `go60.uf2` back to the host with the host's UID/GID.
 
-### C. Native Nix (fastest iteration)
+### B. Native Nix (fastest iteration)
 
 Requires Nix on the host plus a sibling checkout of `moergo-sc/zmk`:
 
@@ -157,18 +144,9 @@ For unfamiliar behaviors (hold-tap flavors, sticky keys, combos, capsword, etc.)
 2. The script prepends `layout: {qmk_info_json: config/info.json}` so [keymap-drawer](https://github.com/caksoylar/keymap-drawer) uses the real Go60 geometry (thumb-cluster rotations etc.) instead of guessing.
 3. `keymap draw` renders the YAML to SVG.
 
-The same pipeline runs in CI via `.github/workflows/draw.yml` on every push that touches the keymap or `info.json`. The bot pushes a follow-up `[Draw] update keymap rendering` commit with the regenerated files.
+Run it yourself after keymap edits — nothing regenerates these automatically.
 
 To install locally: `pipx install keymap-drawer`.
-
-## CI workflows
-
-| Workflow             | Trigger                               | Output                                     |
-| -------------------- | ------------------------------------- | ------------------------------------------ |
-| `build.yml`          | Any push, PR, or manual dispatch.     | `go60.uf2` as a run artifact.              |
-| `draw.yml`           | Push touching keymap/info.json/itself | Commits regenerated `keymap-drawer/*`.     |
-
-`draw.yml` requires the repo's Actions workflow permissions to be set to **Read and write** (Settings → Actions → General).
 
 ## Configuration files reference
 

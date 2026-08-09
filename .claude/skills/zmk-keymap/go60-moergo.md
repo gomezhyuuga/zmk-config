@@ -23,7 +23,6 @@ Full detail in `docs.md`; quick reference:
 | Build (Docker, skip fetch) | `make build` |
 | Build (Docker, full) | `./build.sh [zmk-ref]`; `REBUILD=1` / `SKIP_FETCH=1` env flags |
 | Build (native nix) | `nix-build ./config --arg firmware 'import ../zmk/default.nix {}' -o combined` |
-| Build (CI) | push — `.github/workflows/build.yml` attaches `go60.uf2` artifact |
 | Flash | `./flash.sh` (build + copy to bootloader drive) |
 | Redraw layout SVGs | `make draw` / `./draw.sh` (keymap-drawer) |
 | HTML layer viewer | `make html` → `output/layout.html`; `make layers` for the popup viewer |

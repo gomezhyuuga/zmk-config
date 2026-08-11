@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# macOS-only: lightweight native HTML viewer (NSWindow + WKWebView, no browser).
+# Compiles tools/html-view-macos.swift on first use, then caches the binary
+# and only rebuilds when the source changes.
+#
+#   tools/html-view-macos wiki/layout.html
+#   tools/html-view-macos https://zmk.dev/docs
+#
+# On Linux use tools/zmk-view (PyQt6) instead.
+#
+# In the window:  esc / ⌘W close   ⌘R reload   ⌘=/⌘- zoom   ⌘0 reset zoom
+set -euo pipefail
+
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SRC="$DIR/html-view-macos.swift"
+BIN="$DIR/.html-view-macos.bin"
+
+if [[ ! -x "$BIN" || "$SRC" -nt "$BIN" ]]; then
+  echo "building html-view-macos…" >&2
+  swiftc -O "$SRC" -o "$BIN"
+fi
+
+exec "$BIN" "$@"

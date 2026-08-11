@@ -3,4 +3,4 @@
 .DS_Store
 /tools/__pycache__/*
 tools/layer-popup
-tools/.html-view.bin
+tools/.html-view-macos.bin

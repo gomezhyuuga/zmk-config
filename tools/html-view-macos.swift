@@ -2,7 +2,7 @@ import Cocoa
 import WebKit
 
 // Minimal native HTML viewer: an NSWindow hosting a WKWebView.
-// Usage: html-view <file.html | http(s)://url>
+// Usage: html-view-macos <file.html | http(s)://url>
 //   esc / ⌘W  close      ⌘R  reload      ⌘=/⌘- zoom
 
 class WebWindow: NSWindow {
@@ -75,7 +75,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 // --- arg parsing ---
 guard CommandLine.arguments.count > 1 else {
-    FileHandle.standardError.write("usage: html-view <file.html | http(s)://url>\n".data(using: .utf8)!)
+    FileHandle.standardError.write("usage: html-view-macos <file.html | http(s)://url>\n".data(using: .utf8)!)
     exit(2)
 }
 

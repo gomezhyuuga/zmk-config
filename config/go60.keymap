@@ -167,6 +167,8 @@
   #define OS_LINEEND        LG(RIGHT)
   #define OS_SELTOLINEEND   LG(LS(RIGHT))
   #define OS_TASKSWITCH_MOD LGUI
+  #define OS_BACK           LG(LBKT)
+  #define OS_FORWARD        LG(RBKT)
 #else
   #define OS_MOD(kc)        LC(kc)
   #define OS_WORD(kc)       LC(kc)
@@ -174,6 +176,8 @@
   #define OS_LINEEND        END
   #define OS_SELTOLINEEND   LS(END)
   #define OS_TASKSWITCH_MOD LALT
+  #define OS_BACK           LA(LEFT)
+  #define OS_FORWARD        LA(RIGHT)
 #endif
 
 /* Semantic OS shortcuts, built from OS_MOD / OS_WORD above */
@@ -1651,7 +1655,7 @@ behaviors {
 
         layer_HRM_macOS {
             bindings = <
-            &kp EQUAL                           &kp N1                         &kp N2                          &kp N3                           &kp N4  &kp N5                                                                                                                                                       &kp N6                            &kp N7                           &kp N8                      &caps_word                                   &kp N0                      &kp LS(N2)
+            &kp EQUAL                           &kp N1                         &kp N2                          &kp N3                           &kp N4  &kp N5                                                                                                                                                       &kp GRAVE                         &kp N7                           &kp N8                      &caps_word                                   &kp N0                      &kp LS(N2)
        &td_shift_caps                            &kp Q                          &kp W                           &kp E                            &kp R   &kp T                                                                                                                                                        &kp Y                             &kp U                            &kp I                           &kp O                                    &kp P                  &td_shift_caps
         &tp LCTRL ESC  &HRM_left_pinky_v1B_TKZ LCTRL A  &HRM_left_ring_v1B_TKZ LALT S  &HRM_left_middy_v1B_TKZ LGUI D  &HRM_left_index_v1B_TKZ LSHFT F   &kp G                                                                                                                                                        &kp H  &HRM_right_index_v1B_TKZ RSHFT J  &HRM_right_middy_v1B_TKZ RGUI K  &HRM_right_ring_v1B_TKZ LALT L  &HRM_right_pinky_semi_v1B_TKZ RCTRL SEMI                         &qt_swap LG(LSHFT) SQT
  &magic LAYER_Magic 0                            &kp Z                          &kp X                           &kp C                            &kp V   &kp B                                                                                                                                                        &kp N                             &kp M                        &kp COMMA                         &kp DOT                                 &kp FSLH  &thumb_v2_TKZ LAYER_Mouse BSLH
@@ -1776,15 +1780,15 @@ behaviors {
  &kp OS_REFRESH  &kp PAUSE_BREAK       &kp OS_SELECT_ALL       &kp OS_UNDO    &kp OS_REDO  &kp OS_CUT                                                                                               &kp DEL      &kp BSPC   &kp OS_WORD_DEL_BACK        &kp OS_WORD_DEL_FWD       &kp TAB              &kp PSCRN
  &sk LSHFT        &kp OS_CLOSE         &kp DEL    &kp OS_WORD_DEL_BACK      &kp OS_WORD_DEL_FWD  &kp OS_COPY                                                                                              &kp LEFT      &kp DOWN         &kp UP          &kp RIGHT     &kp K_APP              &sk RSHFT
  &sk LGUI         &kp OS_FOCUS_ADDR  &kp LG(LA(F8))  &kp LG(LA(F9))  &kp LG(LA(F17))  &kp OS_PASTE                                                                                      &kp OS_WORD_SELECT_LEFT  &kp OS_WORD_LEFT  &kp OS_WORD_RIGHT  &kp OS_WORD_SELECT_RIGHT  &kp OS_LINESTART          &kp OS_LINEEND
-                             &kp LC(LA(LS(F11)))   &kp OS_FIND_PREV        &kp OS_FIND_NEXT                                                                                                                      &kp PG_DN  &kp PG_UP          &kp OS_FIND_NEXT
-                                                                                          &none   &none   &none  &kp OS_LINESTART  &kp OS_LINEEND  &cur_EXTEND_WORD_macos_v1_TKZ
+                             &kp LC(LA(LS(F11)))   &kp OS_FIND_PREV        &kp LG(D)                                                                                                                             &kp PG_DN  &kp PG_UP          &kp OS_FIND_NEXT
+                                                                                          &none   &none   &none  &kp OS_BACK  &kp OS_FORWARD  &cur_EXTEND_WORD_macos_v1_TKZ
             >;
         };
 
         layer_Keypad {
             bindings = <
                 &none     &kp F1     &kp F2     &kp F3     &kp F4         &kp F5                                                               &kp F6     &kp F7       &kp F8        &kp F9          &kp F10     &kp F11
-              &kp TAB      &none     &trans     &trans     &trans         &trans                                                         &kp BSPC &kp KP_N7    &kp KP_N8     &kp KP_N9     &kp KP_SLASH     &kp F12
+              &kp TAB  &kp RA(A)  &kp RA(E)  &kp RA(I)  &kp RA(O)  &kp RA(U)                                                         &kp BSPC &kp KP_N7    &kp KP_N8     &kp KP_N9     &kp KP_SLASH     &kp F12
               &kp ESC     &kp LCTRL     &kp LALT     &kp LGUI     &kp LSHFT         &trans                                                             &kp KP_MINUS    &kp KP_N4    &kp KP_N5     &kp KP_N6  &kp KP_MULTIPLY  &kp KP_NUM
  &magic LAYER_Magic 0  &kp OS_UNDO  &kp OS_CUT  &kp OS_COPY  &kp OS_PASTE  &kp OS_PASTE_PLAIN                                                         &kp KP_DOT  &kp KP_N1    &kp KP_N2     &kp KP_N3        &kp EQUAL       &to 0
                                       &none     &trans     &trans                                                                                      &kp KP_N0  &kp KP_PLUS  &kp KP_ENTER

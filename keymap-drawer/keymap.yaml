@@ -7,7 +7,7 @@ layers:
   - '3'
   - '4'
   - '5'
-  - '6'
+  - '`'
   - '7'
   - '8'
   - '&caps_word'
@@ -722,15 +722,15 @@ layers:
   - END
   - Meh+F11
   - Ctl+Sft+G
-  - Ctl+G
+  - Gui+D
   - PG DN
   - PG UP
   - Ctl+G
   - {type: held}
   - ''
   - ''
-  - HOME
-  - END
+  - Alt+LEFT
+  - Alt+RIGHT
   - '&cur_EXTEND_WORD_macos_v1_TKZ'
   Keypad:
   - ''
@@ -746,11 +746,11 @@ layers:
   - F10
   - F11
   - TAB
-  - ''
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - AltGr+A
+  - AltGr+E
+  - AltGr+I
+  - AltGr+O
+  - AltGr+U
   - BSPC
   - KP 7
   - KP 8

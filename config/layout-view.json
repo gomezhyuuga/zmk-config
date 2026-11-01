@@ -3,6 +3,11 @@
   "_labels_format": "labels maps a physical position to a custom legend. \"POS\": \"text\" relabels every layer where the key is active (skips transparent/blank). \"POS\": {\"LayerName\": \"text\"} targets specific layers only. Positions use the info.json scheme, e.g. R_C3R2. Labels may contain Nerd Font icons — the generator subsets an installed Nerd Font down to the icons used and inlines it, so the page stays self-contained.",
   "_font_format": "font (optional) overrides which Nerd Font supplies the icons: {\"family\": \"Iosevka Nerd Font\"} resolved via fontconfig, or {\"file\": \"~/path/Font.ttf\"} for an exact file. Omit to use the vendored tools/fonts/SymbolsNerdFontMono-Regular.woff2.",
   "labels": {
+    "L_C5R2": { "Keypad": "á" },
+    "L_C4R2": { "Keypad": "é" },
+    "L_C3R2": { "Keypad": "í" },
+    "L_C2R2": { "Keypad": "ó" },
+    "L_C1R2": { "Keypad": "ú" },
     "R_C3R2": { "fn": "👁️ kbd" },
     "R_C2R3": { "fn": "  desk" },
     "R_C3R3": { "fn": "  desk" }
